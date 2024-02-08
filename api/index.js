@@ -3,10 +3,12 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const User = require('./models/User');
 const app = express();
 
 const bcryptSalt = bcrypt.genSaltSync(10);
+const jwtSecret = process.env.JWT_SECRET
 
 app.use(express.json());
 
@@ -37,14 +39,18 @@ app.post('/login', async (req, res) => {
     try {
         const userDoc = await User.findOne({ email });
         if (userDoc) {
-            const passOk = bcrypt.compareSync(password,userDoc.password);
-            if(passOk) {
-                res.cookie('token','').json(userDoc);
+            const passOk = bcrypt.compareSync(password, userDoc.password);
+            if (passOk) {
+                jwt.sign({ email: userDoc.email, id: userDoc._id }, jwtSecret, {}, (err, token) => {
+                    if (err) throw err;
+
+                    res.cookie('token', token).json(userDoc);
+                })
             } else {
-                res.status(404).json({msg: 'Password Wrong'})
+                res.status(404).json({ msg: 'Password Wrong' })
             }
         } else {
-            res.status(404).json({meg: 'Not Found'});
+            res.status(404).json({ meg: 'Not Found' });
         }
     } catch (e) {
         res.status(400).json(e);
