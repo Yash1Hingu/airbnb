@@ -34,7 +34,21 @@ app.post('/register', async (req, res) => {
 
 app.post('/login', async (req, res) => {
     const { email, password } = req.body;
-    res.json({ email, password })
+    try {
+        const userDoc = await User.findOne({ email });
+        if (userDoc) {
+            const passOk = bcrypt.compareSync(password,userDoc.password);
+            if(passOk) {
+                res.cookie('token','').json(userDoc);
+            } else {
+                res.status(404).json({msg: 'Password Wrong'})
+            }
+        } else {
+            res.status(404).json({meg: 'Not Found'});
+        }
+    } catch (e) {
+        res.status(400).json(e);
+    }
 })
 
 app.listen(4000, () => {
