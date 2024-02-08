@@ -4,6 +4,7 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const cookieParser = require('cookie-parser');
 const User = require('./models/User');
 const app = express();
 
@@ -11,6 +12,7 @@ const bcryptSalt = bcrypt.genSaltSync(10);
 const jwtSecret = process.env.JWT_SECRET
 
 app.use(express.json());
+app.use(cookieParser());
 
 app.use(cors({ credentials: true, origin: 'http://localhost:5173' }))
 
@@ -41,7 +43,7 @@ app.post('/login', async (req, res) => {
         if (userDoc) {
             const passOk = bcrypt.compareSync(password, userDoc.password);
             if (passOk) {
-                jwt.sign({ email: userDoc.email, id: userDoc._id }, jwtSecret, {}, (err, token) => {
+                jwt.sign({ email: userDoc.email, id: userDoc._id ,name: userDoc.name}, jwtSecret, {}, (err, token) => {
                     if (err) throw err;
 
                     res.cookie('token', token).json(userDoc);
@@ -57,6 +59,17 @@ app.post('/login', async (req, res) => {
     }
 })
 
+app.get('/profile', async (req, res) => {
+    const token = req.cookies.token;
+    if(token) {
+        jwt.verify(token,jwtSecret,{},(err,user) => {
+            if (err) throw err;
+            res.json(user);
+        })
+    } else {
+        res.json(null);
+    }
+})
 app.listen(4000, () => {
     console.log("Server Running on port 4000");
 })
