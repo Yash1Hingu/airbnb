@@ -32,6 +32,10 @@ app.post('/register', async (req, res) => {
     }
 })
 
+app.post('/login', async (req, res) => {
+    const { email, password } = req.body;
+    res.json({ email, password })
+})
 
 app.listen(4000, () => {
     console.log("Server Running on port 4000");
