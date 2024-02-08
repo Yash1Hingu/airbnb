@@ -1,8 +1,12 @@
 import axios from 'axios';
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { Link, Navigate } from "react-router-dom";
 
+import { userAction } from '../../store/user';
+
 export default function LoginPage() {
+    const dispatch = useDispatch();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [redirect, setRedirect] = useState(false);
@@ -10,10 +14,11 @@ export default function LoginPage() {
     async function handleLogin(e) {
         e.preventDefault();
         try {
-            await axios.post('/login', {
+            const response = await axios.post('/login', {
                 email,
                 password
-            })
+            });
+            dispatch(userAction.setUserDoc(response.data));
             alert('login success.')
             setRedirect(true);
         } catch (e) {
