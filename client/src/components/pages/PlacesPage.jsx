@@ -109,11 +109,13 @@ export default function PlacesPage() {
                         <div className="flex flex-wrap mt-2 w-full items-center gap-2">
                             {addedPhotos.length > 0 &&
                                 addedPhotos.map(link => (
-                                    <img
-                                        src={'http://localhost:4000/upload/' + link}
-                                        alt=""
-                                        className='w-60 rounded-lg '
-                                        key={link} />
+                                    <div className='h-32 flex'>
+                                        <img
+                                            src={'http://localhost:4000/upload/' + link}
+                                            alt=""
+                                            className='w-full rounded-lg object-cover'
+                                            key={link} />
+                                    </div>
                                 ))
                             }
                             <label
