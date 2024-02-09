@@ -23,7 +23,7 @@ export default function Header() {
                 </svg>
             </button>
         </div>
-        <Link to="/login" className='flex items-center gap-2 border border-gray-300 rounded-full py-2 px-4 shadow-md shadow-gray-300 overflow-hidden'>
+        <Link to={userDoc?'/account':'/login'} className='flex items-center gap-2 border border-gray-300 rounded-full py-2 px-4 shadow-md shadow-gray-300 overflow-hidden'>
             {userDoc &&
                 <p>Hello, {userDoc.name}</p>
             }

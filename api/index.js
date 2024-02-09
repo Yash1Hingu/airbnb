@@ -22,7 +22,7 @@ app.get('/test', (req, res) => {
     res.json('test ok');
 })
 
-app.post('/register', async (req, res) => {
+app.post('/register', async (req, res) => { 
     const { name, email, password } = req.body;
     try {
         const userDoc = await User.create({
@@ -32,6 +32,7 @@ app.post('/register', async (req, res) => {
         })
         res.json(userDoc);
     } catch (e) {
+        console.log(e)
         res.status(422).json(e);
     }
 })
