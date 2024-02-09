@@ -22,7 +22,7 @@ app.get('/test', (req, res) => {
     res.json('test ok');
 })
 
-app.post('/register', async (req, res) => { 
+app.post('/register', async (req, res) => {
     const { name, email, password } = req.body;
     try {
         const userDoc = await User.create({
@@ -44,7 +44,7 @@ app.post('/login', async (req, res) => {
         if (userDoc) {
             const passOk = bcrypt.compareSync(password, userDoc.password);
             if (passOk) {
-                jwt.sign({ email: userDoc.email, id: userDoc._id ,name: userDoc.name}, jwtSecret, {}, (err, token) => {
+                jwt.sign({ email: userDoc.email, id: userDoc._id, name: userDoc.name }, jwtSecret, {}, (err, token) => {
                     if (err) throw err;
 
                     res.cookie('token', token).json(userDoc);
@@ -62,8 +62,8 @@ app.post('/login', async (req, res) => {
 
 app.get('/profile', async (req, res) => {
     const token = req.cookies.token;
-    if(token) {
-        jwt.verify(token,jwtSecret,{},(err,user) => {
+    if (token) {
+        jwt.verify(token, jwtSecret, {}, (err, user) => {
             if (err) throw err;
             res.json(user);
         })
@@ -71,6 +71,11 @@ app.get('/profile', async (req, res) => {
         res.json(null);
     }
 })
+
+app.get('/logout', async (req, res) => {
+    res.cookie('token','').json("ok");
+})
+
 app.listen(4000, () => {
     console.log("Server Running on port 4000");
 })
