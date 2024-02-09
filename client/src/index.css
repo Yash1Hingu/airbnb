@@ -2,13 +2,31 @@
 @tailwind components;
 @tailwind utilities;
 
-input[type="text"],input[type="password"],input[type="email"]{
-    @apply w-full border my-1 rounded-2xl px-2 py-1 outline-none
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="time"],
+input[type="number"],
+textarea {
+    @apply w-full border my-1 rounded-2xl px-4 py-2 outline-none
 }
 
-button{
+button {
     @apply bg-gray-300;
 }
-button.primary{
+
+button.primary {
     @apply bg-primary w-full mt-2 rounded-2xl py-1 text-gray-100
+}
+
+
+.placepage_checkbox {
+    @apply flex gap-2 items-center m-2 p-4 border border-gray-500 rounded-3xl
+}
+.placepage_checkbox span svg {
+    @apply w-4
+}
+
+.placepage_checkbox span {
+    @apply flex gap-2 items-center
 }
