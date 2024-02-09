@@ -5,6 +5,9 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
+const imageDownloader = require('image-downloader');
+const multer = require('multer');
+const fs = require('fs');
 const User = require('./models/User');
 const app = express();
 
@@ -13,6 +16,7 @@ const jwtSecret = process.env.JWT_SECRET
 
 app.use(express.json());
 app.use(cookieParser());
+app.use('/upload', express.static(__dirname + '/upload'));
 
 app.use(cors({ credentials: true, origin: 'http://localhost:5173' }))
 
@@ -73,9 +77,35 @@ app.get('/profile', async (req, res) => {
 })
 
 app.get('/logout', async (req, res) => {
-    res.cookie('token','').json("ok");
+    res.cookie('token', '').json("ok");
 })
 
+app.post('/upload-by-link', async (req, res) => {
+    const { link } = req.body;
+    const newName = 'image' + Date.now() + '.png';
+    await imageDownloader.image({
+        url: link,
+        dest: __dirname + '/upload/' + newName,
+    });
+
+    res.json({ newName });
+})
+
+const photoMiddleware = multer({ dest: 'upload/' })
+app.post('/upload', photoMiddleware.array('photos', 100), (req, res) => {
+    const uploadFiles = [];
+    for (let i = 0; i < req.files.length; i++) {
+        const { path, originalname } = req.files[i];
+        const parts = originalname.split('.');
+        const ext = parts[parts.length - 1];
+        let newPath = path + '.' + ext;
+        fs.renameSync(path, newPath);
+        newPath = newPath.replace(('upload\\' || 'upload/'), '');
+        console.log(newPath);
+        uploadFiles.push(newPath);
+    }
+    res.json(uploadFiles);
+})
 app.listen(4000, () => {
     console.log("Server Running on port 4000");
 })
