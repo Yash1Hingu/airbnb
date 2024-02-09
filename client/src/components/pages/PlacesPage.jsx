@@ -1,6 +1,9 @@
+import axios from 'axios';
+
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import Perks from "../PageUI/Perks";
+import Loader from '../PageUI/Loader';
 
 export default function PlacesPage() {
     const { action } = useParams();
@@ -14,6 +17,18 @@ export default function PlacesPage() {
     const [checkIn, setCheckIn] = useState('');
     const [checkOut, setCheckOut] = useState('');
     const [maxGuests, setMaxGuests] = useState(1);
+    const [isLoading, setIsLoading] = useState(false);
+
+    async function addPhotoByLink(ev) {
+        ev.preventDefault();
+        setIsLoading(true);
+        const { data: fileName } = await axios.post('/upload-by-link', { link: photoLink });
+        setAddedPhotos(prev => {
+            return [...prev, fileName.newName];
+        });
+        setIsLoading(false);
+    }
+
     return (<>
         {action !== 'new' &&
             <div className="flex flex-col items-center mt-8">
@@ -63,15 +78,29 @@ export default function PlacesPage() {
                                 value={photoLink}
                                 onChange={ev => setPhotoLink(ev.target.value)}
                             />
-                            <button className="bg-primary text-white p-2 rounded-lg">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 8.25H7.5a2.25 2.25 0 0 0-2.25 2.25v9a2.25 2.25 0 0 0 2.25 2.25h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25H15M9 12l3 3m0 0 3-3m-3 3V2.25" />
-                                </svg>
-                            </button>
+                            {!isLoading &&
+                                <button onClick={addPhotoByLink} className="bg-primary text-white p-2 rounded-lg">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 8.25H7.5a2.25 2.25 0 0 0-2.25 2.25v9a2.25 2.25 0 0 0 2.25 2.25h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25H15M9 12l3 3m0 0 3-3m-3 3V2.25" />
+                                    </svg>
+                                </button>
+                            }
+                            {isLoading &&
+                                <Loader />
+                            }
                         </div>
-                        <div className="mt-2 grid grid-cols-4 gap-2">
+                        <div className="flex flex-wrap mt-2 w-full items-center gap-2">
+                            {addedPhotos.length > 0 &&
+                                addedPhotos.map(link => (
+                                    <img
+                                        src={'http://localhost:4000/upload/' + link}
+                                        alt=""
+                                        className='w-60 rounded-lg '
+                                        key={link} />
+                                ))
+                            }
                             <button
-                                className="flex justify-center py-8 bg-transparent border border-gray-700 text-gray-700 rounded-2xl hover:bg-gray-100">
+                                className="flex justify-center p-8 bg-transparent border border-gray-700 text-gray-700 rounded-2xl hover:bg-gray-100">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M9 8.25H7.5a2.25 2.25 0 0 0-2.25 2.25v9a2.25 2.25 0 0 0 2.25 2.25h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25H15m0-3-3-3m0 0-3 3m3-3V15" />
                                 </svg>
