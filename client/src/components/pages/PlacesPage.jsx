@@ -22,10 +22,13 @@ export default function PlacesPage() {
     async function addPhotoByLink(ev) {
         ev.preventDefault();
         setIsLoading(true);
-        const { data: fileName } = await axios.post('/upload-by-link', { link: photoLink });
-        setAddedPhotos(prev => {
-            return [...prev, fileName.newName];
-        });
+        await axios.post('/upload-by-link', { link: photoLink }).then(({ data: fileName }) => {
+            setAddedPhotos(prev => {
+                return [...prev, fileName.newName];
+            });
+        }).catch((err) => {
+            alert("Not Getting Image!,Please Try with other url!");
+        })
         setIsLoading(false);
     }
 

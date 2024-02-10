@@ -86,9 +86,12 @@ app.post('/upload-by-link', async (req, res) => {
     await imageDownloader.image({
         url: link,
         dest: __dirname + '/upload/' + newName,
+    }).then(({ filename }) => {
+        res.json({ newName });
+    }).catch(err => {
+        res.status(404).json({msg: 'Not Found'});
     });
 
-    res.json({ newName });
 })
 
 const photoMiddleware = multer({ dest: 'upload/' })
