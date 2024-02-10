@@ -9,6 +9,7 @@ const imageDownloader = require('image-downloader');
 const multer = require('multer');
 const fs = require('fs');
 const User = require('./models/User');
+const Place = require('./models/Place');
 const app = express();
 
 const bcryptSalt = bcrypt.genSaltSync(10);
@@ -89,7 +90,7 @@ app.post('/upload-by-link', async (req, res) => {
     }).then(({ filename }) => {
         res.json({ newName });
     }).catch(err => {
-        res.status(404).json({msg: 'Not Found'});
+        res.status(404).json({ msg: 'Not Found' });
     });
 
 })
@@ -108,6 +109,35 @@ app.post('/upload', photoMiddleware.array('photos', 100), (req, res) => {
         uploadFiles.push(newPath);
     }
     res.json(uploadFiles);
+})
+
+app.post('/places', async (req, res) => {
+    const { token } = req.cookies;
+    const {
+        title, address, addedPhotos,
+        description, perks, extraInfo,
+        checkIn, checkOut, maxGuests
+    } = req.body;
+
+    jwt.verify(token, jwtSecret, {}, async (err, userDoc) => {
+        if (err) throw err;
+        await Place.create({
+            owner: userDoc.id,
+            title, address,
+            photos: addedPhotos,
+            description,
+            perks,
+            extraInfo,
+            checkIn,
+            checkOut,
+            maxGuests
+        }).then(placeDoc => {
+            res.json(placeDoc);
+        }).catch(err => {
+            console.log(err);
+            res.status(404).json({ msg: 'Failed To Save!!!' });
+        })
+    })
 })
 app.listen(4000, () => {
     console.log("Server Running on port 4000");

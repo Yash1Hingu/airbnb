@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-import { useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, Navigate, useParams } from "react-router-dom";
 import Perks from "../PageUI/Perks";
 import PhotosUploader from '../PageUI/PhotosUploader';
 
@@ -16,7 +16,39 @@ export default function PlacesPage() {
     const [checkIn, setCheckIn] = useState('');
     const [checkOut, setCheckOut] = useState('');
     const [maxGuests, setMaxGuests] = useState(1);
+    const [redirect, setRedirect] = useState(false);
 
+    useEffect(() => {
+        setRedirect(false);
+    })
+
+    function reSet() {
+        setTitle('');
+        setAddress('')
+        setAddedPhotos([]);
+        setDescription('');
+        setPerks([]);
+        setExtraInfo('');
+        setCheckIn('');
+        setCheckOut('');
+        setMaxGuests(1);
+    }
+    async function handleOnSubmit(ev) {
+        ev.preventDefault();
+        await axios.post('/places', {
+            title, address, addedPhotos,
+            description, perks, extraInfo,
+            checkIn, checkOut, maxGuests
+        }).then((data) => {
+            alert('Saved Place');
+            setRedirect(true);
+            reSet();
+        });
+    }
+
+    if (redirect && action === 'new') {
+        return <Navigate to='/account/places' />
+    }
 
     return (<>
         {action !== 'new' &&
@@ -32,7 +64,7 @@ export default function PlacesPage() {
 
         {action === 'new' &&
             <div className="flex justify-center mt-8">
-                <form action="" className="min-w-[900px]">
+                <form className="min-w-[900px]" onSubmit={handleOnSubmit}>
                     <div className="mt-2">
                         <h2 className="text-2xl font-bold">Title</h2>
                         <p className="text-sm text-gray-500">Title for your places advertisment.</p>
