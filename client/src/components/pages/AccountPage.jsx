@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Link, Navigate, useParams } from 'react-router-dom';
 import { userAction } from '../../store/user';
 import PlacesPage from './PlacesPage';
+
 export default function AccountPage() {
     const userDoc = useSelector(state => state.user.userDoc);
     const uiReady = useSelector(state => state.ui.isReady);

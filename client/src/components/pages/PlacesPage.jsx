@@ -4,8 +4,10 @@ import { useEffect, useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import Perks from "../PageUI/Perks";
 import PhotosUploader from '../PageUI/PhotosUploader';
+import Places from '../PageComponents/Places';
 
 export default function PlacesPage() {
+    const { id } = useParams();
     const { action } = useParams();
     const [title, setTitle] = useState('');
     const [address, setAddress] = useState('');
@@ -17,10 +19,28 @@ export default function PlacesPage() {
     const [checkOut, setCheckOut] = useState('');
     const [maxGuests, setMaxGuests] = useState(1);
     const [redirect, setRedirect] = useState(false);
+    const [isEdit, setIsEdit] = useState(false);
 
     useEffect(() => {
         setRedirect(false);
-    })
+        reSet();
+        setIsEdit(false);
+        axios.get('/edit/' + id).then((response) => {
+            const placeDoc = response.data[0];
+            setTitle(placeDoc.title);
+            setAddress(placeDoc.address)
+            setAddedPhotos([...placeDoc.photos]);
+            setDescription(placeDoc.description);
+            setPerks([...placeDoc.perks]);
+            setExtraInfo(placeDoc.extraInfo);
+            setCheckIn(placeDoc.checkIn);
+            setCheckOut(placeDoc.checkOut);
+            setMaxGuests(placeDoc.maxGuests);
+            setIsEdit(true);
+        }).catch(err => {
+
+        })
+    }, [id])
 
     function reSet() {
         setTitle('');
@@ -33,6 +53,7 @@ export default function PlacesPage() {
         setCheckOut('');
         setMaxGuests(1);
     }
+
     async function handleOnSubmit(ev) {
         ev.preventDefault();
         await axios.post('/places', {
@@ -51,18 +72,19 @@ export default function PlacesPage() {
     }
 
     return (<>
-        {action !== 'new' &&
+        {action === undefined &&
             <div className="flex flex-col items-center mt-8">
-                <Link to={'/account/places/new'} className="bg-primary py-2 px-4 rounded-full text-white flex gap-2">
+                <Link to={'/account/places/new'} className="bg-primary py-2 px-4 rounded-full text-white flex gap-2 mb-8">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                     </svg>
                     Add Places
                 </Link>
+                <Places />
             </div>
         }
 
-        {action === 'new' &&
+        {(action === 'new' || action === 'edit') &&
             <div className="flex justify-center mt-8">
                 <form className="min-w-[900px]" onSubmit={handleOnSubmit}>
                     <div className="mt-2">
@@ -155,7 +177,8 @@ export default function PlacesPage() {
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z" />
                         </svg>
-                        Save
+                        {isEdit && 'Update'}
+                        {!isEdit && 'Save'}
                     </button>
                 </form>
             </div>
