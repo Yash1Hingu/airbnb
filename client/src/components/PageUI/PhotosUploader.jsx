@@ -17,6 +17,7 @@ export default function PhotosUploader({ addedPhotos, setAddedPhotos }) {
             alert("Not Getting Image!,Please Try with other url!");
         })
         setIsLoading(false);
+        setPhotoLink('');
     }
 
     function uploadPhoto(ev) {
