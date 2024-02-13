@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Header from "../Header";
 import axios from "axios";
+import { dateShow } from "../../util/dateShow";
 
 export default function IndexPage() {
     const [places, setPlaces] = useState([]);
@@ -29,7 +30,7 @@ export default function IndexPage() {
                     <h2 className="font-semibold mt-2 text-gray-900">{place.address}</h2>
                     <h3 className="text-sm truncate text-gray-500">{place.title}</h3>
                     <h4 className="text-sm text-gray-500">
-                        {place.checkIn} - {place.checkOut}
+                        {dateShow(place.checkIn)} - {dateShow(place.checkOut)}
                     </h4>
                     <p className="flex items-center gap-1 text-sm">
                         <strong className="text-[14px] text-gray-700">&#8377;{place.price}</strong> night
