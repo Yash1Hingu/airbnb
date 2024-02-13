@@ -164,7 +164,7 @@ export default function PlacesPage() {
                             <div className="w-full">
                                 <h3 className="font-bold text-gray-600">Check In</h3>
                                 <input
-                                    type="time"
+                                    type="date"
                                     required
                                     value={checkIn}
                                     onChange={ev => setCheckIn(ev.target.value)}
@@ -173,7 +173,7 @@ export default function PlacesPage() {
                             <div className="w-full">
                                 <h3 className="font-bold text-gray-600">Check Out</h3>
                                 <input
-                                    type="time"
+                                    type="date"
                                     required
                                     value={checkOut}
                                     onChange={ev => setCheckOut(ev.target.value)}
