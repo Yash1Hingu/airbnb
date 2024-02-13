@@ -96,20 +96,27 @@ export default function PlacePage() {
                     <div className="text-center text-2xl">Price: <strong className="text-gray-700">&#8377;{place.price}</strong> /per night</div>
                     <div className="grid grid-cols-2 border border-gray-600 rounded-2xl mt-4">
                         <div className="border-r border-gray-600 p-2">
-                            Check In: 
+                            Check In:
                             <input type="date" />
                         </div>
                         <div className="p-2">
-                            Check Out: 
+                            Check Out:
                             <input type="date" />
                         </div>
                         <div className="col-span-2 p-2 border-t border-gray-600">
-                            Guest: 
-                            <input type="number" min={1} max={place.maxGuests}/>
+                            Guest:
+                            <input type="number" min={1} max={place.maxGuests} />
                         </div>
                     </div>
                     <button className="w-full mt-4 p-2 rounded-xl text-white bg-primary hover:opacity-90">Book Now</button>
                 </form>
+            </div>
+
+            <div className="-mx-8 px-8">
+                <div>
+                    <span className="font-bold text-2xl">Extra Info</span>
+                    <p>{place.extraInfo}</p>
+                </div>
             </div>
         </div>
     )
