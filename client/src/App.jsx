@@ -11,6 +11,7 @@ import { userAction } from './store/user';
 import { uiActions } from './store/ui';
 import AccountPage from './components/pages/AccountPage';
 import PlacesPage from './components/pages/PlacesPage';
+import PlacePage from './components/pages/PlacePage';
 
 axios.defaults.baseURL = 'http://localhost:4000';
 axios.defaults.withCredentials = true;
@@ -37,6 +38,7 @@ function App() {
         <Route path='/account/:subpage?' element={<AccountPage />} />
         <Route path='/account/:subpage/:action' element={<AccountPage />} />
         <Route path='/account/:subpage/:action/:id' element={<AccountPage />} />
+        <Route path='/place/:id' element={<PlacePage />} />
       </Route>
     </Routes>
   )

@@ -199,6 +199,10 @@ app.get('/indexplaces', async (req, res) => {
     res.json(await Place.find().limit(20));
 })
 
+app.get('/place/:id', async (req, res) => {
+    const { id } = req.params;
+    res.json(await Place.findById(id));
+})
 app.listen(4000, () => {
     console.log("Server Running on port 4000");
 })
