@@ -51,7 +51,7 @@ export default function PlacePage() {
                 {place.address}
             </a>
 
-            <div onClick={(ev) => showAllPhotos(ev, true)} className="relative my-6">
+            <div onClick={(ev) => showAllPhotos(ev, true)} className="relative my-6 cursor-pointer">
                 <div className="grid grid-cols-[2fr_1fr] gap-4 rounded-2xl overflow-hidden">
                     <div>
                         <img className="aspect-square object-cover" src={"http://localhost:4000/upload/" + (place.photos?.[0])} alt="" />
