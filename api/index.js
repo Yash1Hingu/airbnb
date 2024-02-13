@@ -116,7 +116,7 @@ app.post('/places', async (req, res) => {
     const {
         title, address, addedPhotos,
         description, perks, extraInfo,
-        checkIn, checkOut, maxGuests
+        checkIn, checkOut, maxGuests, price
     } = req.body;
 
     jwt.verify(token, jwtSecret, {}, async (err, userDoc) => {
@@ -130,7 +130,8 @@ app.post('/places', async (req, res) => {
             extraInfo,
             checkIn,
             checkOut,
-            maxGuests
+            maxGuests,
+            price
         }).then(placeDoc => {
             res.json(placeDoc);
         }).catch(err => {
@@ -169,7 +170,7 @@ app.put('/places', async (req, res) => {
         id,
         title, address, addedPhotos,
         description, perks, extraInfo,
-        checkIn, checkOut, maxGuests
+        checkIn, checkOut, maxGuests, price
     } = req.body;
 
     jwt.verify(token, jwtSecret, {}, async (err, userDoc) => {
@@ -184,7 +185,8 @@ app.put('/places', async (req, res) => {
                 extraInfo,
                 checkIn,
                 checkOut,
-                maxGuests
+                maxGuests,
+                price
             });
 
             await placeDoc.save();
@@ -192,6 +194,11 @@ app.put('/places', async (req, res) => {
         }
     })
 })
+
+app.get('/indexplaces', async (req, res) => {
+    res.json(await Place.find().limit(20));
+})
+
 app.listen(4000, () => {
     console.log("Server Running on port 4000");
 })

@@ -18,6 +18,7 @@ export default function PlacesPage() {
     const [checkIn, setCheckIn] = useState('');
     const [checkOut, setCheckOut] = useState('');
     const [maxGuests, setMaxGuests] = useState(1);
+    const [price, setPrice] = useState(100);
     const [redirect, setRedirect] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
 
@@ -37,6 +38,7 @@ export default function PlacesPage() {
                 setCheckIn(placeDoc.checkIn);
                 setCheckOut(placeDoc.checkOut);
                 setMaxGuests(placeDoc.maxGuests);
+                setPrice(placeDoc.price);
                 setIsEdit(true);
             }).catch(err => {
 
@@ -54,6 +56,7 @@ export default function PlacesPage() {
         setCheckIn('');
         setCheckOut('');
         setMaxGuests(1);
+        setPrice(100);
     }
 
     async function handleOnSubmit(ev) {
@@ -64,7 +67,7 @@ export default function PlacesPage() {
                 id,
                 title, address, addedPhotos,
                 description, perks, extraInfo,
-                checkIn, checkOut, maxGuests
+                checkIn, checkOut, maxGuests,price
             }).then((data) => {
                 alert('Updated Place');
                 setRedirect(true)
@@ -73,7 +76,7 @@ export default function PlacesPage() {
             await axios.post('/places', {
                 title, address, addedPhotos,
                 description, perks, extraInfo,
-                checkIn, checkOut, maxGuests
+                checkIn, checkOut, maxGuests,price
             }).then((data) => {
                 alert('Saved Place');
                 setRedirect(true);
@@ -184,6 +187,16 @@ export default function PlacesPage() {
                                     required
                                     value={maxGuests}
                                     onChange={ev => setMaxGuests(ev.target.value)}
+                                />
+                            </div>
+                            <div className="w-full">
+                                <h3 className="font-bold text-gray-600">Price</h3>
+                                <input
+                                    type="number"
+                                    min='100'
+                                    required
+                                    value={price}
+                                    onChange={ev => setPrice(ev.target.value)}
                                 />
                             </div>
                         </div>
