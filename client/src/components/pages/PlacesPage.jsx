@@ -25,21 +25,23 @@ export default function PlacesPage() {
         setRedirect(false);
         reSet();
         setIsEdit(false);
-        axios.get('/edit/' + id).then((response) => {
-            const placeDoc = response.data[0];
-            setTitle(placeDoc.title);
-            setAddress(placeDoc.address)
-            setAddedPhotos([...placeDoc.photos]);
-            setDescription(placeDoc.description);
-            setPerks([...placeDoc.perks]);
-            setExtraInfo(placeDoc.extraInfo);
-            setCheckIn(placeDoc.checkIn);
-            setCheckOut(placeDoc.checkOut);
-            setMaxGuests(placeDoc.maxGuests);
-            setIsEdit(true);
-        }).catch(err => {
+        if (id) {
+            axios.get('/edit/' + id).then((response) => {
+                const placeDoc = response.data[0];
+                setTitle(placeDoc.title);
+                setAddress(placeDoc.address)
+                setAddedPhotos([...placeDoc.photos]);
+                setDescription(placeDoc.description);
+                setPerks([...placeDoc.perks]);
+                setExtraInfo(placeDoc.extraInfo);
+                setCheckIn(placeDoc.checkIn);
+                setCheckOut(placeDoc.checkOut);
+                setMaxGuests(placeDoc.maxGuests);
+                setIsEdit(true);
+            }).catch(err => {
 
-        })
+            })
+        }
     }, [id])
 
     function reSet() {
@@ -186,7 +188,7 @@ export default function PlacesPage() {
                             </div>
                         </div>
                     </div>
-                    <button className="flex p-4 gap-2 border rounded-3xl mt-4 items-center justify-center bg-gray-700 text-white w-full hover:bg-primary">
+                    <button type="submit" className="flex p-4 gap-2 border rounded-3xl mt-4 items-center justify-center bg-gray-700 text-white w-full hover:bg-primary">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z" />
                         </svg>
