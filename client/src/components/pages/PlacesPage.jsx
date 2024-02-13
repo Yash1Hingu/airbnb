@@ -56,18 +56,31 @@ export default function PlacesPage() {
 
     async function handleOnSubmit(ev) {
         ev.preventDefault();
-        await axios.post('/places', {
-            title, address, addedPhotos,
-            description, perks, extraInfo,
-            checkIn, checkOut, maxGuests
-        }).then((data) => {
-            alert('Saved Place');
-            setRedirect(true);
-            reSet();
-        });
+
+        if (isEdit) {
+            await axios.put('/places', {
+                id,
+                title, address, addedPhotos,
+                description, perks, extraInfo,
+                checkIn, checkOut, maxGuests
+            }).then((data) => {
+                alert('Updated Place');
+                setRedirect(true)
+            });
+        } else {
+            await axios.post('/places', {
+                title, address, addedPhotos,
+                description, perks, extraInfo,
+                checkIn, checkOut, maxGuests
+            }).then((data) => {
+                alert('Saved Place');
+                setRedirect(true);
+                reSet();
+            });
+        }
     }
 
-    if (redirect && action === 'new') {
+    if (redirect && (action === 'new' || action === 'edit')) {
         return <Navigate to='/account/places' />
     }
 

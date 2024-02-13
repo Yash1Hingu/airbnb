@@ -158,9 +158,39 @@ app.get('/edit/:id', async (req, res) => {
             res.json(placeDoc);
         }).catch(err => {
             return res.status(404).json(err);
-        }) 
+        })
     })
 
+})
+
+app.put('/places', async (req, res) => {
+    const { token } = req.cookies;
+    const {
+        id,
+        title, address, addedPhotos,
+        description, perks, extraInfo,
+        checkIn, checkOut, maxGuests
+    } = req.body;
+
+    jwt.verify(token, jwtSecret, {}, async (err, userDoc) => {
+        if (err) throw err;
+        const placeDoc = await Place.findById(id);
+        if (userDoc.id === placeDoc.owner.toString()) {
+            placeDoc.set({
+                title, address,
+                photos: addedPhotos,
+                description,
+                perks,
+                extraInfo,
+                checkIn,
+                checkOut,
+                maxGuests
+            });
+
+            await placeDoc.save();
+            res.json('ok');
+        }
+    })
 })
 app.listen(4000, () => {
     console.log("Server Running on port 4000");
