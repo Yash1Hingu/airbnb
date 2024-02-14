@@ -2,12 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
-#root{
+#root {
     max-width: 1600px;
     margin: 0 auto;
     padding: 0 3.2rem;
     overflow: hidden;
 }
+
 input[type="text"],
 input[type="password"],
 input[type="email"],
@@ -85,5 +86,32 @@ button.primary {
 
     100% {
         transform: rotate(-360deg);
+    }
+}
+
+/* Add this to your CSS stylesheet */
+
+.loading-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.loading-animation {
+    background: linear-gradient(to left, #eee, #ddd, #eee);
+    /* Adjust colors as needed */
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
     }
 }

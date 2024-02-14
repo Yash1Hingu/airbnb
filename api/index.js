@@ -196,7 +196,8 @@ app.put('/places', async (req, res) => {
 })
 
 app.get('/indexplaces', async (req, res) => {
-    res.json(await Place.find().limit(20));
+    const placeDoc = await Place.find().limit(20);
+    res.json(placeDoc);
 })
 
 app.get('/place/:id', async (req, res) => {

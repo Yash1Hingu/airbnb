@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom"
 import { dateShow } from "../../util/dateShow";
+import ruppesShow from "../../util/ruppesShow";
 
 export default function PlacePage() {
     const { id } = useParams();
@@ -93,7 +94,7 @@ export default function PlacePage() {
                     </div>
                 </div>
                 <form className=" bg-white p-8 rounded-2xl shadow-lg">
-                    <div className="text-center text-2xl">Price: <strong className="text-gray-700">&#8377;{place.price}</strong> /per night</div>
+                    <div className="text-center text-2xl">Price: <strong className="text-gray-700">&#8377;{ruppesShow(place.price)}</strong> /per night</div>
                     <div className="grid grid-cols-2 border border-gray-600 rounded-2xl mt-4">
                         <div className="border-r border-gray-600 p-2">
                             Check In:
