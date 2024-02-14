@@ -9,9 +9,9 @@ export default function PhotosUploader({ addedPhotos, setAddedPhotos }) {
     async function addPhotoByLink(ev) {
         ev.preventDefault();
         setIsLoading(true);
-        await axios.post('/upload-by-link', { link: photoLink }).then(({ data: fileName }) => {
+        await axios.post('/upload-by-link', { link: photoLink }).then(({ data }) => {
             setAddedPhotos(prev => {
-                return [...prev, fileName.newName];
+                return [...prev, data.newPath];
             });
         }).catch((err) => {
             alert("Not Getting Image!,Please Try with other url!");

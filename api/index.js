@@ -88,12 +88,22 @@ app.post('/upload-by-link', async (req, res) => {
     await imageDownloader.image({
         url: link,
         dest: __dirname + '/upload/' + newName,
-    }).then(({ filename }) => {
-        res.json({ newName });
+    }).then(async () => {
+
+        let newPath = 'upload/' + newName;
+        const uplfilepath = newPath;
+        await imgbbUploader(process.env.IMGBB, newPath)
+            .then((response) => {
+                newPath = response.url;
+            })
+            .catch((error) => console.error(error));
+        fs.unlinkSync(uplfilepath);
+        res.json({ newPath });
+
     }).catch(err => {
+        console.log(err);
         res.status(404).json({ msg: 'Not Found' });
     });
-
 })
 
 const photoMiddleware = multer({ dest: 'upload/' })
