@@ -100,7 +100,7 @@ button.primary {
 }
 
 .loading-animation {
-    background: linear-gradient(to left, #eee, #ddd, #eee);
+    background: linear-gradient(to left, #eee, #bebebe, #f8f8f8);
     /* Adjust colors as needed */
     background-size: 200% 100%;
     animation: loading 1.5s infinite;
