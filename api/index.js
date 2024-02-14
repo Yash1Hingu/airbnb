@@ -223,9 +223,18 @@ app.get('/place/:id', async (req, res) => {
     res.json(await Place.findById(id));
 })
 
-app.post('/bookings', async (req, res) => {
+function getUserDataFromToken(req) {
+    return new Promise((resolve, reject) => {
+        jwt.verify(req.cookies.token, jwtSecret, {}, async (err, userDoc) => {
+            if (err) throw err;
+            resolve(userDoc);
+        });
+    })
+}
 
-    const { id,checkIn,
+app.post('/bookings', async (req, res) => {
+    const userData = await getUserDataFromToken(req);
+    const { id, checkIn,
         checkOut,
         name,
         phone,
@@ -233,7 +242,8 @@ app.post('/bookings', async (req, res) => {
         price } = req.body;
 
     Booking.create({
-        place: id,  
+        place: id,
+        user: userData.id,
         checkIn,
         checkOut,
         name,
@@ -246,6 +256,12 @@ app.post('/bookings', async (req, res) => {
         res.status(404).json(err);
     })
 })
+
+app.get('/booking', async (req, res) => {
+    const userData = getUserDataFromToken(req);
+    res.json(await Booking.find({ user: userData.id }));
+})
+
 app.listen(4000, () => {
     console.log("Server Running on port 4000");
 })

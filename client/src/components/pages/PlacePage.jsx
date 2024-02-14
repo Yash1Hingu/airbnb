@@ -53,7 +53,7 @@ export default function PlacePage() {
     }
 
     if (redirect) {
-        return <Navigate to={'/account/booking'} />
+        return <Navigate to={'/account/bookings'} />
     }
 
     async function bookThisPlace(ev) {
