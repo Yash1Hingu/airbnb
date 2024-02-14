@@ -14,6 +14,7 @@ input[type="password"],
 input[type="email"],
 input[type="time"],
 input[type="number"],
+input[type="tel"],
 textarea {
     @apply w-full border my-1 rounded-2xl px-4 py-2 outline-none
 }

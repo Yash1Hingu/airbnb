@@ -11,6 +11,7 @@ const fs = require('fs');
 const imgbbUploader = require("imgbb-uploader");
 const User = require('./models/User');
 const Place = require('./models/Place');
+const Booking = require('./models/Booking');
 const app = express();
 
 const bcryptSalt = bcrypt.genSaltSync(10);
@@ -220,6 +221,30 @@ app.get('/indexplaces', async (req, res) => {
 app.get('/place/:id', async (req, res) => {
     const { id } = req.params;
     res.json(await Place.findById(id));
+})
+
+app.post('/bookings', async (req, res) => {
+
+    const { id,checkIn,
+        checkOut,
+        name,
+        phone,
+        guest,
+        price } = req.body;
+
+    Booking.create({
+        place: id,  
+        checkIn,
+        checkOut,
+        name,
+        phone,
+        guest,
+        price
+    }).then((bookDoc) => {
+        res.json(bookDoc);
+    }).catch(err => {
+        res.status(404).json(err);
+    })
 })
 app.listen(4000, () => {
     console.log("Server Running on port 4000");

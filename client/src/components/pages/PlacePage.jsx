@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom"
+import { Navigate, useParams } from "react-router-dom";
+import { differenceInCalendarDays } from 'date-fns';
 import { dateShow } from "../../util/dateShow";
 import ruppesShow from "../../util/ruppesShow";
 
@@ -8,7 +9,18 @@ export default function PlacePage() {
     const { id } = useParams();
     const [place, setPlace] = useState({});
     const [isShow, setIsShow] = useState(false);
+    const [checkIn, setCheckIn] = useState('');
+    const [checkOut, setCheckOut] = useState('');
+    const [guest, setGuest] = useState(1);
+    const [name, setName] = useState('');
+    const [phone, setPhone] = useState('');
+    const [price, setPrice] = useState(place.price);
+    const [redirect, setRedirect] = useState(false);
 
+    let numberOfDays = 0;
+    if (checkIn && checkOut) {
+        numberOfDays = differenceInCalendarDays(new Date(checkOut), new Date(checkIn));
+    }
     useEffect(() => {
         axios.get('/place/' + id).then(res => {
             setPlace(res.data);
@@ -38,6 +50,26 @@ export default function PlacePage() {
                 </button>
             </div>
         )
+    }
+
+    if (redirect) {
+        return <Navigate to={'/account/booking'} />
+    }
+
+    async function bookThisPlace(ev) {
+        ev.preventDefault();
+        const data = {
+            id,
+            checkIn,
+            checkOut,
+            name,
+            phone,
+            guest,
+            price : numberOfDays*place.price + place.price
+        }
+
+        await axios.post('/bookings', data);
+        setRedirect(true);
     }
     return (
         <div className="bg-gray-100 -mx-4 py-4 px-8 my-8 rounded-2xl">
@@ -72,7 +104,7 @@ export default function PlacePage() {
                 </button>
             </div>
 
-            <div className="grid grid-cols-[2fr_1fr] gap-8">
+            <div className="grid grid-cols-[2fr_1fr] gap-8" >
                 <div>
                     <div>
                         <span className="font-bold text-2xl">Description</span>
@@ -93,23 +125,33 @@ export default function PlacePage() {
                         </div>
                     </div>
                 </div>
-                <form className=" bg-white p-8 rounded-2xl shadow-lg">
+                <form className=" bg-white p-8 rounded-2xl shadow-lg" onSubmit={bookThisPlace}>
                     <div className="text-center text-2xl">Price: <strong className="text-gray-700">&#8377;{ruppesShow(place.price)}</strong> /per night</div>
                     <div className="grid grid-cols-2 border border-gray-600 rounded-2xl mt-4">
                         <div className="border-r border-gray-600 p-2">
                             Check In:
-                            <input type="date" />
+                            <input type="date" value={checkIn} onChange={ev => setCheckIn(ev.target.value)} />
                         </div>
                         <div className="p-2">
                             Check Out:
-                            <input type="date" />
+                            <input type="date" value={checkOut} onChange={ev => setCheckOut(ev.target.value)} />
                         </div>
                         <div className="col-span-2 p-2 border-t border-gray-600">
                             Guest:
-                            <input type="number" min={1} max={place.maxGuests} />
+                            <input type="number" min={1} max={place.maxGuests} value={guest} onChange={ev => setGuest(ev.target.value)} />
                         </div>
                     </div>
-                    <button className="w-full mt-4 p-2 rounded-xl text-white bg-primary hover:opacity-90">Book Now</button>
+                    <div className="col-span-2 p-2 border-gray-600">
+                        Name
+                        <input type="text" value={name} onChange={ev => setName(ev.target.value)} />
+                    </div>
+                    <div className="col-span-2 p-2 border-gray-600">
+                        Phone
+                        <input type="tel" value={phone} onChange={ev => setPhone(ev.target.value)} />
+                    </div>
+                    <button className="w-full mt-4 p-2 rounded-xl text-white bg-primary hover:opacity-90">Book Now
+                        <span className="pl-2">{numberOfDays > 0 && ruppesShow(numberOfDays * place.price + place.price)}</span>
+                    </button>
                 </form>
             </div>
 
