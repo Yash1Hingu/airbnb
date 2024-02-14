@@ -8,6 +8,7 @@ const cookieParser = require('cookie-parser');
 const imageDownloader = require('image-downloader');
 const multer = require('multer');
 const fs = require('fs');
+const imgbbUploader = require("imgbb-uploader");
 const User = require('./models/User');
 const Place = require('./models/Place');
 const app = express();
@@ -96,17 +97,23 @@ app.post('/upload-by-link', async (req, res) => {
 })
 
 const photoMiddleware = multer({ dest: 'upload/' })
-app.post('/upload', photoMiddleware.array('photos', 100), (req, res) => {
+app.post('/upload', photoMiddleware.array('photos', 100), async (req, res) => {
     const uploadFiles = [];
     for (let i = 0; i < req.files.length; i++) {
         const { path, originalname } = req.files[i];
         const parts = originalname.split('.');
         const ext = parts[parts.length - 1];
         let newPath = path + '.' + ext;
+
         fs.renameSync(path, newPath);
-        newPath = newPath.replace(('upload\\' || 'upload/'), '');
-        console.log(newPath);
-        uploadFiles.push(newPath);
+        const uplfilepath = newPath;
+        await imgbbUploader(process.env.IMGBB, newPath)
+            .then((response) => {
+                newPath = response.url;
+                uploadFiles.push(newPath);
+            })
+            .catch((error) => console.error(error));
+        fs.unlinkSync(uplfilepath);
     }
     res.json(uploadFiles);
 })

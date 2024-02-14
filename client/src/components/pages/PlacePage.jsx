@@ -25,7 +25,7 @@ export default function PlacePage() {
             <div className="absolute bg-gray-900 top-0 left-0 w-full flex flex-col p-8 items-center gap-8">
                 <div>
                     {place.photos.map(img => (
-                        <img src={"http://localhost:4000/upload/" + img} alt="" className="max-w-[700px] rounded-3xl mb-8"
+                        <img src={img} alt="" className="max-w-[700px] rounded-3xl mb-8"
                             key={img}
                         />
                     ))}
@@ -55,12 +55,12 @@ export default function PlacePage() {
             <div onClick={(ev) => showAllPhotos(ev, true)} className="relative my-6 cursor-pointer">
                 <div className="grid grid-cols-[2fr_1fr] gap-4 rounded-2xl overflow-hidden">
                     <div>
-                        <img className="aspect-square object-cover" src={"http://localhost:4000/upload/" + (place.photos?.[0])} alt="" />
+                        <img className="aspect-square object-cover" src={(place.photos?.[0])} alt="" />
                     </div>
                     <div className="">
-                        <img className="aspect-square object-cover" src={"http://localhost:4000/upload/" + (place.photos?.[1])} alt="" />
+                        <img className="aspect-square object-cover" src={(place.photos?.[1])} alt="" />
                         <div className="relative overflow-hidden">
-                            <img className="aspect-square object-cover pt-4" src={"http://localhost:4000/upload/" + (place.photos?.[2])} alt="" />
+                            <img className="aspect-square object-cover pt-4" src={(place.photos?.[2])} alt="" />
                         </div>
                     </div>
                 </div>

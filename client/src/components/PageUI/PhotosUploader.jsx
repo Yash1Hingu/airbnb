@@ -77,7 +77,7 @@ export default function PhotosUploader({ addedPhotos, setAddedPhotos }) {
                         addedPhotos.map(link => (
                             <div className='h-32 flex relative' key={link}>
                                 <img
-                                    src={'http://localhost:4000/upload/' + link}
+                                    src={link}
                                     alt=""
                                     className='w-full rounded-lg object-cover'
                                 />

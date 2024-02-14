@@ -34,7 +34,7 @@ export default function IndexPage() {
                         className="rounded-2xl flex"
                     >
                         {place.photos[0] &&
-                            <img src={`http://localhost:4000/upload/${place.photos[0]}`} alt="place photo"
+                            <img src={`${place.photos[0]}`} alt="place photo"
                                 className="rounded-2xl object-cover aspect-square" />
                         }
                     </div>
