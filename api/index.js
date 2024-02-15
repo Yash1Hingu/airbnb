@@ -258,10 +258,15 @@ app.post('/bookings', async (req, res) => {
 })
 
 app.get('/booking', async (req, res) => {
-    const userData = getUserDataFromToken(req);
+    const userData = await getUserDataFromToken(req);
     res.json(await Booking.find({ user: userData.id }).populate('place'));
 })
 
+app.get('/booking/:id', async (req, res) => {
+    const { id } = req.params;
+    res.json(await Booking.findById(id).populate('place'));
+
+})
 app.listen(4000, () => {
     console.log("Server Running on port 4000");
 })

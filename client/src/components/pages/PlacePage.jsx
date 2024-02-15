@@ -1,11 +1,15 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Navigate, useParams } from "react-router-dom";
+import { Link, Navigate, useParams } from "react-router-dom";
 import { differenceInCalendarDays } from 'date-fns';
 import { dateShow } from "../../util/dateShow";
 import ruppesShow from "../../util/ruppesShow";
+import PhoosView from "../PageComponents/PhoosView";
+import { useSelector } from "react-redux";
 
 export default function PlacePage() {
+    const userDoc = useSelector(state => state.user.userDoc);
+
     const { id } = useParams();
     const [place, setPlace] = useState({});
     const [isShow, setIsShow] = useState(false);
@@ -65,7 +69,7 @@ export default function PlacePage() {
             name,
             phone,
             guest,
-            price : numberOfDays*place.price + place.price
+            price: numberOfDays * place.price + place.price
         }
 
         await axios.post('/bookings', data);
@@ -84,25 +88,8 @@ export default function PlacePage() {
                 {place.address}
             </a>
 
-            <div onClick={(ev) => showAllPhotos(ev, true)} className="relative my-6 cursor-pointer">
-                <div className="grid grid-cols-[2fr_1fr] gap-4 rounded-2xl overflow-hidden">
-                    <div>
-                        <img className="aspect-square object-cover" src={(place.photos?.[0])} alt="" />
-                    </div>
-                    <div className="">
-                        <img className="aspect-square object-cover" src={(place.photos?.[1])} alt="" />
-                        <div className="relative overflow-hidden">
-                            <img className="aspect-square object-cover pt-4" src={(place.photos?.[2])} alt="" />
-                        </div>
-                    </div>
-                </div>
-                <button onClick={(ev) => showAllPhotos(ev, true)} className="flex gap-1 absolute bottom-4 right-4 py-2 px-4 rounded-xl text-black shadow-2xl">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
-                        <path fillRule="evenodd" d="M1.5 6a2.25 2.25 0 0 1 2.25-2.25h16.5A2.25 2.25 0 0 1 22.5 6v12a2.25 2.25 0 0 1-2.25 2.25H3.75A2.25 2.25 0 0 1 1.5 18V6ZM3 16.06V18c0 .414.336.75.75.75h16.5A.75.75 0 0 0 21 18v-1.94l-2.69-2.689a1.5 1.5 0 0 0-2.12 0l-.88.879.97.97a.75.75 0 1 1-1.06 1.06l-5.16-5.159a1.5 1.5 0 0 0-2.12 0L3 16.061Zm10.125-7.81a1.125 1.125 0 1 1 2.25 0 1.125 1.125 0 0 1-2.25 0Z" clipRule="evenodd" />
-                    </svg>
-                    show all photos
-                </button>
-            </div>
+            <PhoosView place={place} />
+
 
             <div className="grid grid-cols-[2fr_1fr] gap-8" >
                 <div>
@@ -125,37 +112,44 @@ export default function PlacePage() {
                         </div>
                     </div>
                 </div>
-                <form className=" bg-white p-8 rounded-2xl shadow-lg" onSubmit={bookThisPlace}>
-                    <div className="text-center text-2xl">Price: <strong className="text-gray-700">&#8377;{ruppesShow(place.price)}</strong> /per night</div>
-                    <div className="grid grid-cols-2 border border-gray-600 rounded-2xl mt-4">
-                        <div className="border-r border-gray-600 p-2">
-                            Check In:
-                            <input type="date" value={checkIn} onChange={ev => setCheckIn(ev.target.value)} />
+                {userDoc?.id === place.owner &&
+                    <div className="flex items-center justify-center gap-2 mt-4 bg-primary h-fit p-4 text-center font-bold text-white text-3xl rounded-3xl">
+                        You'r Owner of this Place
                         </div>
-                        <div className="p-2">
-                            Check Out:
-                            <input type="date" value={checkOut} onChange={ev => setCheckOut(ev.target.value)} />
+                }
+                {userDoc?.id !== place.owner &&
+                    <form className=" bg-white p-8 rounded-2xl shadow-lg" onSubmit={bookThisPlace}>
+                        <div className="text-center text-2xl">Price: <strong className="text-gray-700">&#8377;{ruppesShow(place.price)}</strong> /per night</div>
+                        <div className="grid grid-cols-2 border border-gray-600 rounded-2xl mt-4">
+                            <div className="border-r border-gray-600 p-2">
+                                Check In:
+                                <input type="date" value={checkIn} onChange={ev => setCheckIn(ev.target.value)} />
+                            </div>
+                            <div className="p-2">
+                                Check Out:
+                                <input type="date" value={checkOut} onChange={ev => setCheckOut(ev.target.value)} />
+                            </div>
+                            <div className="col-span-2 p-2 border-t border-gray-600">
+                                Guest:
+                                <input type="number" min={1} max={place.maxGuests} value={guest} onChange={ev => setGuest(ev.target.value)} />
+                            </div>
                         </div>
-                        <div className="col-span-2 p-2 border-t border-gray-600">
-                            Guest:
-                            <input type="number" min={1} max={place.maxGuests} value={guest} onChange={ev => setGuest(ev.target.value)} />
+                        <div className="col-span-2 p-2 border-gray-600">
+                            Name
+                            <input type="text" value={name} onChange={ev => setName(ev.target.value)} />
                         </div>
-                    </div>
-                    <div className="col-span-2 p-2 border-gray-600">
-                        Name
-                        <input type="text" value={name} onChange={ev => setName(ev.target.value)} />
-                    </div>
-                    <div className="col-span-2 p-2 border-gray-600">
-                        Phone
-                        <input type="tel" value={phone} onChange={ev => setPhone(ev.target.value)} />
-                    </div>
-                    <button className="w-full mt-4 p-2 rounded-xl text-white bg-primary hover:opacity-90">Book Now
-                        <span className="pl-2">{numberOfDays > 0 && ruppesShow(numberOfDays * place.price + place.price)}</span>
-                    </button>
-                </form>
+                        <div className="col-span-2 p-2 border-gray-600">
+                            Phone
+                            <input type="tel" value={phone} onChange={ev => setPhone(ev.target.value)} />
+                        </div>
+                        <button className="w-full mt-4 p-2 rounded-xl text-white bg-primary hover:opacity-90">Book Now
+                            <span className="pl-2">{numberOfDays > 0 && ruppesShow(numberOfDays * place.price + place.price)}</span>
+                        </button>
+                    </form>
+                }
             </div>
 
-            <div className="-mx-8 px-8">
+            <div className="-mx-8 px-8 my-8">
                 <div>
                     <span className="font-bold text-2xl">Extra Info</span>
                     <p>{place.extraInfo}</p>
