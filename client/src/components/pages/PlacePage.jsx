@@ -25,7 +25,7 @@ export default function PlacePage() {
     const [redirect, setRedirect] = useState(false);
     const [showDescription, setShowDescription] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
-
+    console.log(userDoc?.id, place.owner);
     let numberOfDays = 0;
     if (checkIn && checkOut) {
         numberOfDays = differenceInCalendarDays(new Date(checkOut), new Date(checkIn));
@@ -147,40 +147,52 @@ export default function PlacePage() {
                                 {place.maxGuests}
                             </div>
                         </div>
-                        {userDoc?.id === place.owner &&
-                            <div className="flex items-center justify-center gap-2 mt-4 bg-primary h-fit p-4 text-center font-bold text-white text-3xl rounded-3xl">
-                                You'r Owner of this Place
-                            </div>
+
+                        {userDoc &&
+                            <>
+                                {userDoc?.id === place.owner &&
+                                    <div className="flex items-center justify-center gap-2 mt-4 bg-primary h-fit p-4 text-center font-bold text-white text-3xl rounded-3xl">
+                                        You'r Owner of this Place
+                                    </div>
+                                }
+                                {userDoc?.id !== place.owner &&
+                                    <form className=" bg-white p-8 rounded-2xl shadow-lg" onSubmit={bookThisPlace}>
+                                        <div className="text-center text-2xl">Price: <strong className="text-gray-700">&#8377;{ruppesShow(place.price)}</strong> /per night</div>
+                                        <div className="grid grid-cols-2 border border-gray-600 rounded-2xl mt-4">
+                                            <div className="border-r border-gray-600 p-2">
+                                                Check In:
+                                                <input type="date" value={checkIn} onChange={ev => setCheckIn(ev.target.value)} />
+                                            </div>
+                                            <div className="p-2">
+                                                Check Out:
+                                                <input type="date" value={checkOut} onChange={ev => setCheckOut(ev.target.value)} />
+                                            </div>
+                                            <div className="col-span-2 p-2 border-t border-gray-600">
+                                                Guest:
+                                                <input type="number" min={1} max={place.maxGuests} value={guest} onChange={ev => setGuest(ev.target.value)} />
+                                            </div>
+                                        </div>
+                                        <div className="col-span-2 p-2 border-gray-600">
+                                            Name
+                                            <input type="text" value={name} onChange={ev => setName(ev.target.value)} />
+                                        </div>
+                                        <div className="col-span-2 p-2 border-gray-600">
+                                            Phone
+                                            <input type="tel" value={phone} onChange={ev => setPhone(ev.target.value)} />
+                                        </div>
+                                        <button className="w-full mt-4 p-2 rounded-xl text-white bg-primary hover:opacity-90">Book Now
+                                            <span className="pl-2">{numberOfDays > 0 && ruppesShow(numberOfDays * place.price + place.price)}</span>
+                                        </button>
+                                    </form>
+                                }
+                            </>
                         }
-                        {userDoc?.id !== place.owner &&
-                            <form className=" bg-white p-8 rounded-2xl shadow-lg" onSubmit={bookThisPlace}>
-                                <div className="text-center text-2xl">Price: <strong className="text-gray-700">&#8377;{ruppesShow(place.price)}</strong> /per night</div>
-                                <div className="grid grid-cols-2 border border-gray-600 rounded-2xl mt-4">
-                                    <div className="border-r border-gray-600 p-2">
-                                        Check In:
-                                        <input type="date" value={checkIn} onChange={ev => setCheckIn(ev.target.value)} />
-                                    </div>
-                                    <div className="p-2">
-                                        Check Out:
-                                        <input type="date" value={checkOut} onChange={ev => setCheckOut(ev.target.value)} />
-                                    </div>
-                                    <div className="col-span-2 p-2 border-t border-gray-600">
-                                        Guest:
-                                        <input type="number" min={1} max={place.maxGuests} value={guest} onChange={ev => setGuest(ev.target.value)} />
-                                    </div>
-                                </div>
-                                <div className="col-span-2 p-2 border-gray-600">
-                                    Name
-                                    <input type="text" value={name} onChange={ev => setName(ev.target.value)} />
-                                </div>
-                                <div className="col-span-2 p-2 border-gray-600">
-                                    Phone
-                                    <input type="tel" value={phone} onChange={ev => setPhone(ev.target.value)} />
-                                </div>
-                                <button className="w-full mt-4 p-2 rounded-xl text-white bg-primary hover:opacity-90">Book Now
-                                    <span className="pl-2">{numberOfDays > 0 && ruppesShow(numberOfDays * place.price + place.price)}</span>
-                                </button>
-                            </form>
+                        {!userDoc &&
+                            <div className="mt-4">
+                                <Link to={'/login'} className="block text-center p-2 rounded-2xl font-bold text-white bg-primary hover:opacity-90" >
+                                    Book Now
+                                </Link>
+                            </div>
                         }
 
                         <div className="-mx-8 px-8 my-8">
@@ -239,40 +251,51 @@ export default function PlacePage() {
                                 </div>
                             </div>
                         </div>
-                        {userDoc?.id === place.owner &&
-                            <div className="flex items-center justify-center gap-2 mt-4 bg-primary h-fit p-4 text-center font-bold text-white text-3xl rounded-3xl">
-                                You'r Owner of this Place
-                            </div>
+                        {userDoc &&
+                            <>
+                                {userDoc?.id === place.owner &&
+                                    <div className="flex items-center justify-center gap-2 mt-4 bg-primary h-fit p-4 text-center font-bold text-white text-3xl rounded-3xl">
+                                        You'r Owner of this Place
+                                    </div>
+                                }
+                                {userDoc?.id !== place.owner &&
+                                    <form className=" bg-white p-8 rounded-2xl shadow-lg" onSubmit={bookThisPlace}>
+                                        <div className="text-center text-2xl">Price: <strong className="text-gray-700">&#8377;{ruppesShow(place.price)}</strong> /per night</div>
+                                        <div className="grid grid-cols-2 border border-gray-600 rounded-2xl mt-4">
+                                            <div className="border-r border-gray-600 p-2">
+                                                Check In:
+                                                <input type="date" value={checkIn} onChange={ev => setCheckIn(ev.target.value)} />
+                                            </div>
+                                            <div className="p-2">
+                                                Check Out:
+                                                <input type="date" value={checkOut} onChange={ev => setCheckOut(ev.target.value)} />
+                                            </div>
+                                            <div className="col-span-2 p-2 border-t border-gray-600">
+                                                Guest:
+                                                <input type="number" min={1} max={place.maxGuests} value={guest} onChange={ev => setGuest(ev.target.value)} />
+                                            </div>
+                                        </div>
+                                        <div className="col-span-2 p-2 border-gray-600">
+                                            Name
+                                            <input type="text" value={name} onChange={ev => setName(ev.target.value)} />
+                                        </div>
+                                        <div className="col-span-2 p-2 border-gray-600">
+                                            Phone
+                                            <input type="tel" value={phone} onChange={ev => setPhone(ev.target.value)} />
+                                        </div>
+                                        <button className="w-full mt-4 p-2 rounded-xl text-white bg-primary hover:opacity-90">Book Now
+                                            <span className="pl-2">{numberOfDays > 0 && ruppesShow(numberOfDays * place.price + place.price)}</span>
+                                        </button>
+                                    </form>
+                                }
+                            </>
                         }
-                        {userDoc?.id !== place.owner &&
-                            <form className=" bg-white p-8 rounded-2xl shadow-lg" onSubmit={bookThisPlace}>
-                                <div className="text-center text-2xl">Price: <strong className="text-gray-700">&#8377;{ruppesShow(place.price)}</strong> /per night</div>
-                                <div className="grid grid-cols-2 border border-gray-600 rounded-2xl mt-4">
-                                    <div className="border-r border-gray-600 p-2">
-                                        Check In:
-                                        <input type="date" value={checkIn} onChange={ev => setCheckIn(ev.target.value)} />
-                                    </div>
-                                    <div className="p-2">
-                                        Check Out:
-                                        <input type="date" value={checkOut} onChange={ev => setCheckOut(ev.target.value)} />
-                                    </div>
-                                    <div className="col-span-2 p-2 border-t border-gray-600">
-                                        Guest:
-                                        <input type="number" min={1} max={place.maxGuests} value={guest} onChange={ev => setGuest(ev.target.value)} />
-                                    </div>
-                                </div>
-                                <div className="col-span-2 p-2 border-gray-600">
-                                    Name
-                                    <input type="text" value={name} onChange={ev => setName(ev.target.value)} />
-                                </div>
-                                <div className="col-span-2 p-2 border-gray-600">
-                                    Phone
-                                    <input type="tel" value={phone} onChange={ev => setPhone(ev.target.value)} />
-                                </div>
-                                <button className="w-full mt-4 p-2 rounded-xl text-white bg-primary hover:opacity-90">Book Now
-                                    <span className="pl-2">{numberOfDays > 0 && ruppesShow(numberOfDays * place.price + place.price)}</span>
-                                </button>
-                            </form>
+                        {!userDoc &&
+                            <div className="mt-4">
+                                <Link to={'/login'} className="block text-center p-2 rounded-2xl font-bold text-white bg-primary hover:opacity-90" >
+                                    Book Now
+                                </Link>
+                            </div>
                         }
                     </div>
 
