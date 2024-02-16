@@ -20,11 +20,11 @@ export default function BookingsPage() {
     return (<>
         {!isLoading && <div className="mt-8">
             {bookings.map((data) => (
-                <Link to={`/account/bookings/${data._id}`} className="flex h-[200px] bg-gray-300 gap-2 mb-4 overflow-hidden rounded-2xl cursor-pointer" key={data._id}>
-                    <div className="p-2 flex overflow-hidden">
-                        <img className="aspect-square object-cover rounded-xl" src={data.place?.photos[0]} alt="" />
+                <Link to={`/account/bookings/${data._id}`} className="flex flex-col md:flex-row md:h-[200px] bg-gray-300 gap-2 mb-4 overflow-hidden rounded-2xl cursor-pointer" key={data._id}>
+                    <div className="md:p-2 flex overflow-hidden">
+                        <img className="aspect-square object-cover " src={data.place?.photos[0]} alt="" />
                     </div>
-                    <div className="flex flex-col justify-center">
+                    <div className="flex flex-col justify-center px-4 pb-4 md:p-0">
                         <h2 className="font-bold mt-2 text-xl">{data.place?.title}</h2>
                         <h3 className="flex gap-1 text-gray-900 mt-2">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">

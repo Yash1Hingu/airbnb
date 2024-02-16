@@ -23,7 +23,7 @@ export default function IndexPage() {
     }
 
     return (<>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-8 gap-y-12 mt-8">
+        <div className="grid grid-cols-1 p-2 md:p-0 md:grid-cols-3 lg:grid-cols-4 gap-x-8 gap-y-12 mt-8">
             {places.map(place => (
                 <Link
                     to={'/place/' + place._id}

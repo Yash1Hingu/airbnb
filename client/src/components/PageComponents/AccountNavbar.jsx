@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { Link, useLocation, useParams } from "react-router-dom";
 
 export default function AccountNavbar() {
     const { pathname } = useLocation();
+    const ui = useSelector(state => state.ui.isMobile);
     const classes = 'flex gap-2 px-4 py-2 rounded-full bg-gray-300 text-black ';
     const activeClasses = ' rounded-full bg-primary text-white '
 
     return (
-        <nav className='w-full flex justify-center mt-8 gap-4'>
+        <nav className='md:w-full flex flex-col md:flex-row md:justify-center md:mt-8 gap-4'>
             <Link to={'/account'} 
                 className={`${classes} ${pathname === '/account'?activeClasses:''}`}
             >

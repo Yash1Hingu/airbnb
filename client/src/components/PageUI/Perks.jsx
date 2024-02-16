@@ -12,7 +12,7 @@ export default function Perks({ selected, onChange }) {
             <div className="mt-2">
                 <h2 className="text-2xl font-bold">Perks</h2>
                 <p className="text-sm text-gray-500">select all the perks of your place.</p>
-                <div className="grid grid-cols-3">
+                <div className="md:grid md:grid-cols-3">
                     <label className="placepage_checkbox">
                         <input type="checkbox" name="wifi" onChange={handleCbTick} checked={selected.includes('wifi')}/>
                         <span>

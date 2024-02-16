@@ -6,9 +6,12 @@ import PhoosView from "../PageComponents/PhoosView";
 import { differenceInCalendarDays, format } from "date-fns";
 import { dateShow } from "../../util/dateShow";
 import ruppesShow from "../../util/ruppesShow";
+import PhotosView from "../Mobile/PhotosView";
+import { useSelector } from "react-redux";
 
 export default function BookingPage() {
     const { id } = useParams();
+    const ui = useSelector(state => state.ui.isMobile);
     const [bookPlace, setBookPlace] = useState({});
     const [isLoading, setIsLoading] = useState(true);
     useEffect(() => {
@@ -25,7 +28,10 @@ export default function BookingPage() {
             </div>
         }
         {!isLoading &&
-            <div className=" -mx-4 py-4 px-8 my-8 rounded-2xl">
+            <div className=" md:-mx-4 md:py-4 md:px-8 my-8 rounded-2xl">
+                {ui &&
+                    <PhotosView place={bookPlace} />
+                }
                 <h1 className="text-2xl mb-4 font-bold">{bookPlace.title}</h1>
                 <a
                     href={"https://maps.google.com/?q=" + bookPlace.address}
@@ -37,7 +43,7 @@ export default function BookingPage() {
                     {bookPlace.address}
                 </a>
                 <div>
-                    <div className="flex justify-between items-center p-4 bg-gray-200 my-2 rounded-2xl text-black">
+                    <div className="flex flex-col md:flex-row justify-between items-center p-4 bg-gray-200 my-2 rounded-2xl text-black gap-2">
                         <div>
                             <h1 className="text-2xl font-bold">Your Booking information:</h1>
                             <div className="flex gap-2 items-center">
@@ -62,7 +68,7 @@ export default function BookingPage() {
                                 </h3>
                             </div>
                         </div>
-                        <div className="bg-primary p-4 text-white font-black text-2xl rounded-xl">
+                        <div className="bg-primary p-4 text-white font-black text-2xl rounded-xl md:w-auto w-full">
                             Total Price: <br />
                             <span className="flex gap-1 items-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
@@ -73,7 +79,9 @@ export default function BookingPage() {
                         </div>
                     </div>
                 </div>
-                <PhoosView place={bookPlace} />
+                {!ui &&
+                    <PhoosView place={bookPlace} />
+                }
             </div>
         }
     </>

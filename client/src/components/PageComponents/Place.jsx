@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 export default function Place({ ...place }) {
 
     return (
-        <Link to={'/account/places/edit/'+place._id} className="grid grid-cols-[2fr_4fr] gap-4">
+        <Link to={'/account/places/edit/'+place._id} className="flex flex-col md:grid md:grid-cols-[2fr_4fr] gap-4">
             <div className="relative aspect-square">
                 <img
                     src={place.photos[0]}

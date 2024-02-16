@@ -16,7 +16,7 @@ export default function Places() {
 
     return (
         <>
-            {!isLoading && <div className="flex flex-col gap-8 w-[700px]">
+            {!isLoading && <div className="flex flex-col gap-8 md:w-[700px]">
                 {places.map(place => (
                     <Place {...place} key={place._id}/>
                 ))}

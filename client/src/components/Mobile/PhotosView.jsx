@@ -48,12 +48,15 @@ export default function PhotosView({ place }) {
     };
 
     return (
-        <div onClick={(ev) => showAllPhotos(ev, true)} className="max-w-screen-sm  -mx-4 mt-4 relative">
+        <div onClick={(ev) => showAllPhotos(ev, true)} className="max-w-screen-sm  -mx-4 mt-4 relative overflow-hidden">
             <Slider {...settings}>
                 {place.photos?.map((photo, index) => (
-                    <div key={index} className="mx-auto">
-                        <img src={photo} alt={`Photo ${index + 1}`} className="w-full h-auto aspect-video object-cover" />
-                    </div>
+                    <>
+                        <div key={index} className="mx-auto">
+                            <img src={photo} alt={`Photo ${index + 1}`} className="w-full h-auto aspect-video object-cover" />
+                        </div>
+                        <div className='absolute bottom-2 right-2'>0/100</div>
+                    </>
                 ))}
             </Slider>
         </div>
