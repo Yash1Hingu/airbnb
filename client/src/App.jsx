@@ -18,6 +18,7 @@ import ProfilePage from './components/pages/ProfilePage';
 import BookingsPage from './components/pages/BookingsPage';
 
 axios.defaults.baseURL = 'https://airbnbapi-xyms.onrender.com';
+// axios.defaults.baseURL = 'http://localhost:4000';
 axios.defaults.withCredentials = true;
 
 function App() {

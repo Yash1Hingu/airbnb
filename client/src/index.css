@@ -9,6 +9,12 @@
     overflow: hidden;
 }
 
+@media screen and (max-width:700px){
+    #root {
+        @apply p-3;
+    }
+}
+
 input[type="text"],
 input[type="password"],
 input[type="email"],
