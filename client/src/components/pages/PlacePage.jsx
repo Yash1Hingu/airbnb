@@ -8,6 +8,7 @@ import PhoosView from "../PageComponents/PhoosView";
 import { useSelector } from "react-redux";
 import PhotosView from "../Mobile/PhotosView";
 import PageLoader from "../PageUI/PageLoader";
+import Loader from "../PageUI/Loader";
 
 export default function PlacePage() {
     const userDoc = useSelector(state => state.user.userDoc);
@@ -25,7 +26,8 @@ export default function PlacePage() {
     const [redirect, setRedirect] = useState(false);
     const [showDescription, setShowDescription] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
-    console.log(userDoc?.id, place.owner);
+    const [isBooking, setIsBooking] = useState(false);
+
     let numberOfDays = 0;
     if (checkIn && checkOut) {
         numberOfDays = differenceInCalendarDays(new Date(checkOut), new Date(checkIn));
@@ -97,7 +99,9 @@ export default function PlacePage() {
             price: numberOfDays * place.price + place.price
         }
 
+        setIsBooking(true);
         await axios.post('/bookings', data);
+        setIsBooking(false);
         setRedirect(true);
     }
     return (<>
@@ -264,28 +268,43 @@ export default function PlacePage() {
                                         <div className="grid grid-cols-2 border border-gray-600 rounded-2xl mt-4">
                                             <div className="border-r border-gray-600 p-2">
                                                 Check In:
-                                                <input type="date" value={checkIn} onChange={ev => setCheckIn(ev.target.value)} />
+                                                <input type="date" value={checkIn} onChange={ev => setCheckIn(ev.target.value)}
+                                                    min={place.checkIn}
+                                                    max={place.checkOut}
+                                                    required
+                                                />
                                             </div>
                                             <div className="p-2">
                                                 Check Out:
-                                                <input type="date" value={checkOut} onChange={ev => setCheckOut(ev.target.value)} />
+                                                <input type="date" value={checkOut} onChange={ev => setCheckOut(ev.target.value)}
+                                                    min={place.checkIn}
+                                                    max={place.checkOut}
+                                                    required
+                                                />
                                             </div>
                                             <div className="col-span-2 p-2 border-t border-gray-600">
                                                 Guest:
-                                                <input type="number" min={1} max={place.maxGuests} value={guest} onChange={ev => setGuest(ev.target.value)} />
+                                                <input type="number" min={1} max={place.maxGuests} value={guest} onChange={ev => setGuest(ev.target.value)} required />
                                             </div>
                                         </div>
                                         <div className="col-span-2 p-2 border-gray-600">
                                             Name
-                                            <input type="text" value={name} onChange={ev => setName(ev.target.value)} />
+                                            <input type="text" value={name} onChange={ev => setName(ev.target.value)} required />
                                         </div>
                                         <div className="col-span-2 p-2 border-gray-600">
                                             Phone
-                                            <input type="tel" value={phone} onChange={ev => setPhone(ev.target.value)} />
+                                            <input type="tel" value={phone} onChange={ev => setPhone(ev.target.value)} required />
                                         </div>
-                                        <button className="w-full mt-4 p-2 rounded-xl text-white bg-primary hover:opacity-90">Book Now
-                                            <span className="pl-2">{numberOfDays > 0 && ruppesShow(numberOfDays * place.price + place.price)}</span>
-                                        </button>
+                                        {isBooking &&
+                                            <Loader />
+                                        }
+                                        {!isBooking &&
+                                            <button className={` ${numberOfDays === 0 ? "bg-gray-600 cursor-not-allowed" : "bg-primary hover:opacity-90 "} w-full mt-4 p-2 rounded-xl text-white`}
+                                            disabled={numberOfDays === 0}
+                                            >Book Now
+                                                <span className="pl-2">{numberOfDays > 0 && ruppesShow(numberOfDays * place.price + place.price)}</span>
+                                            </button>
+                                        }
                                     </form>
                                 }
                             </>
