@@ -57,10 +57,10 @@ app.post('/login', async (req, res) => {
                     res.cookie('token', token, { sameSite: 'none', secure: true }).json(userDoc);
                 })
             } else {
-                res.status(404).json({ msg: 'Password Wrong' })
+                res.status(404).json({ msg: 'INVALIDPASSWORD' })
             }
         } else {
-            res.status(404).json({ meg: 'Not Found' });
+            res.status(404).json({ msg: 'NOTFOUND' });
         }
     } catch (e) {
         res.status(400).json(e);

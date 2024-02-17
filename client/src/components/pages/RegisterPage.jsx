@@ -1,30 +1,42 @@
 import axios from "axios";
 import { useState } from "react";
 import { Link, Navigate } from "react-router-dom";
+import Loader from "../PageUI/Loader";
 
 export default function RegisterPage() {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [redirect,setRedirect] = useState(false);
+    const [redirect, setRedirect] = useState(false);
+    const [isLoding, setIsLoding] = useState(false);
 
     async function handleRegister(ev) {
         ev.preventDefault();
         try {
+            setIsLoding(true);
             const response = await axios.post('/register', {
                 name,
                 email,
                 password
             });
+            setIsLoding(false);
             alert('Successfully Register.')
             setRedirect(true);
-        } catch(e) {
+        } catch (e) {
             alert('Registeration Failed.')
         }
     }
 
-    if(redirect) {
-        return <Navigate to={'/login'}/>
+    if (redirect) {
+        return <Navigate to={'/login'} />
+    }
+
+    if (isLoding) {
+        return (
+            <div className='h-[80vh] flex justify-center items-center'>
+                <Loader />
+            </div>
+        )
     }
     return (<div className="grow flex flex-col items-center justify-center mb-32">
         <h1 className="text-4xl text-center mb-4">Register</h1>
