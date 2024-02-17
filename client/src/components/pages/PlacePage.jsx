@@ -299,8 +299,8 @@ export default function PlacePage() {
                                             <Loader />
                                         }
                                         {!isBooking &&
-                                            <button className={` ${numberOfDays === 0 ? "bg-gray-600 cursor-not-allowed" : "bg-primary hover:opacity-90 "} w-full mt-4 p-2 rounded-xl text-white`}
-                                            disabled={numberOfDays === 0}
+                                            <button className={` ${numberOfDays <= 0 ? "bg-gray-600 cursor-not-allowed" : "bg-primary hover:opacity-90 "} w-full mt-4 p-2 rounded-xl text-white`}
+                                            disabled={numberOfDays <= 0}
                                             >Book Now
                                                 <span className="pl-2">{numberOfDays > 0 && ruppesShow(numberOfDays * place.price + place.price)}</span>
                                             </button>
